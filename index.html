@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PLASTMER - System Parametrów Technologicznych</title>
+    <script>
+        const script = document.createElement('script');
+        script.src = "https://raw.githubusercontent.com/dawidratal/plastmer/refs/heads/main/baza_danych.js";
+        script.onload = () => console.log("Baza załadowana poprawnie!");
+        document.head.appendChild(script);
+    </script>
     <style>
         /* Główne style aplikacji na ekranie */
         body { background-color: #f4f6f9; font-family: Arial, sans-serif; margin: 0; padding: 0; color: #333; }
