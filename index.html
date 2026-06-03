@@ -279,21 +279,51 @@
     <div id="strefa-etykiety"></div>
 
     <script>
-        const pierwotnaBazaPlastmer = {
-            "A10172116": {
-                model: "A10172116", klient: "Electrolux", projekt: "P10 FS 60", kod: "Półprodukt (117320601) / NADRUK SZYBKI",
-                warstwy: [
-                    { nr: "warstwa 1", grafika: "G0032448", nadruk: "NADRUK SZYBKI", matryca: "M057 - M058", sita: "2PP0956XA", naciag: "SN", gradacja: "120 / 42/57 cm", farba: "F S 0076 / 1. FARBA MARABU", kolor: "NCS S 5502Y", opozniacz: "1g proszku F-S", guma: "Serilor - Czerwona - 65SH (70mm)", wskazowki: "Brak", kod_warstwy: "NPI-0188" },
-                    { nr: "warstwa 2", grafika: "G0032448", nadruk: "NADRUK SZYBKI", matryca: "M057 - M058", sita: "2PP1682XA", naciag: "SN", gradacja: "120 / 42/57 cm", farba: "F S 0082 FARBA MARA", kolor: "Czarny", opozniacz: "10% F-S 0063", guma: "Zielona - 3 warstwowa CERAM 75/55/75 (75mm)", wskazowki: "Brak", kod_warstwy: "NPI-0189" },
-                    { nr: "warstwa 3", grafika: "G0032448", nadruk: "NADRUK SZYBKI", matryca: "M057 - M058", sita: "2PP1683XA", naciag: "SN", gradacja: "90 / 42/57 cm", farba: "F S 0082 FARBA MARA", kolor: "Czarny", opozniacz: "F-S 0017 V24-P - 15g", guma: "Zielona - 3 warstwowa CERAM 75/55/75 (75mm)", wskazowki: "Brak", kod_warstwy: "NPI-0190" },
-                    { nr: "warstwa 4", grafika: "G0032448", nadruk: "NADRUK SZYBKI", matryca: "M057 - M058", sita: "2PP0428XA", naciag: "SN", gradacja: "140 / 42/57 cm", farba: "F S 0005 Farba UV 2AMX 090", kolor: "Lakier", opozniacz: "6g - F-S 0100 UVV6", guma: "Zielona - 3 warstwowa CERAM 75/55/75 (75mm)", wskazowki: "Brak", kod_warstwy: "NPI-0191" }
-                ]
-            }
-        };
+       // Zmienna, w której przechowamy pobraną bazę
+let db = {}; 
 
-        if (!localStorage.getItem('bazaModelePlastmer')) {
-            localStorage.setItem('bazaModelePlastmer', JSON.stringify(pierwotnaBazaPlastmer));
-        }
+// Funkcja pobierająca dane
+async function pobierzBazeZGitHub() {
+    const url = "https://raw.githubusercontent.com/dawidratal/plastmer/refs/heads/main/baza_danych.js";
+    try {
+        const response = await fetch(url);
+        const text = await response.text();
+        
+        // Czyścimy tekst, aby uzyskać sam obiekt JSON
+        // Zakładamy, że w pliku na GitHubie masz: const bazaModelePlastmer = {...}
+        const jsonStr = text.replace(/const\s+bazaModelePlastmer\s*=\s*/, '').replace(/;$/, '');
+        
+        db = JSON.parse(jsonStr);
+        console.log("Baza danych PLASTMER załadowana!");
+    } catch (error) {
+        console.error("Błąd pobierania:", error);
+        alert("Nie udało się połączyć z bazą danych na GitHubie. Sprawdź połączenie.");
+    }
+}
+
+// Uruchamiamy pobieranie przy starcie strony
+pobierzBazeZGitHub();
+
+// Funkcja wyszukiwania, która korzysta z pobranego obiektu 'db'
+function szukajModelu() {
+    const szukana = document.getElementById('input-szukaj').value.trim();
+    
+    // Sprawdzenie czy dane już są
+    if (!db || Object.keys(db).length === 0) {
+        alert("Baza danych się ładuje... spróbuj za chwilę.");
+        return;
+    }
+
+    const dane = db[szukana];
+    
+    if (dane) {
+        console.log("Znaleziono model:", dane);
+        // TUTAJ wstaw swoją logikę wyświetlania danych, np.:
+        // document.getElementById('view-klient').innerText = dane.klient;
+    } else {
+        alert("Nie znaleziono modelu o numerze: " + szukana);
+    }
+}
 
         let licznikWarstw = 0;
 
