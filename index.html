@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <script src="baza_danych.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PLASTMER - System Parametrów Technologicznych</title>
@@ -463,12 +462,12 @@
             szukajModelu();
         }
 
-        // Wyszukiwanie oparte na danych wczytanych z pliku baza_danych.js
-    function szukajModelu() {
-        const szukana = document.getElementById('input-szukaj').value.trim();
-        const wynikDiv = document.getElementById('wyniki-wyszukiwania');
-        const brakWynikuDiv = document.getElementById('brak-wynikow');
-        const tbody = document.getElementById('tabela-warstwy-body');
+        function szukajModelu() {
+            const szukana = document.getElementById('input-szukaj').value.trim();
+            const db = JSON.parse(localStorage.getItem('bazaModelePlastmer'));
+            const wynikDiv = document.getElementById('wyniki-wyszukiwania');
+            const brakWynikuDiv = document.getElementById('brak-wynikow');
+            const tbody = document.getElementById('tabela-warstwy-body');
 
             let znalezionyKlucz = null;
             for (let klucz in db) {
