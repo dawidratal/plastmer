@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>PLASTMER - System Parametrów</title>
+    <style>
+        /* Twoje style CSS */
+        body { font-family: Arial; padding: 20px; }
+        .d-none { display: none; }
+        #input-szukaj { padding: 10px; width: 300px; }
+    </style>
+</head>
+<body>
+
+    <div>
+        <input type="text" id="input-szukaj" placeholder="Wpisz min. 4 cyfry modelu..." oninput="pokazSugestie()" list="modele-lista">
+        <datalist id="modele-lista"></datalist>
+        <button onclick="szukajModelu()">Szukaj</button>
+    </div>
+
+    <div id="wyniki-wyszukiwania" class="d-none">
+        <h2 id="view-model"></h2>
+        <p id="view-klient"></p>
+        <div id="tabela-warstwy-body"></div>
+    </div>
+
+    <script>
+        // --- TWOJA BAZA DANYCH WBUDOWANA W PLIK ---
+        const baza = {
+            "808848341": {
+                model: "808848341",
+                klient: "Elctrolux - Solaro",
+                projekt: "P10 FS 60",
+                warstwy: [{ nr: "1", grafika: "G0007308", nadruk: "SZYBKA" }]
+            },
+            "A17325618": {
+                model: "A17325618",
+                klient: "PANEL",
+                projekt: "PANEL",
+                warstwy: [{ nr: "1", grafika: "G0050992", nadruk: "NADRUK" }]
+            }
+            // Tutaj możesz wkleić resztę swoich modeli w tym samym formacie
+        };
+
+        // Autouzupełnianie
+        function pokazSugestie() {
+            const val = document.getElementById('input-szukaj').value;
+            const lista = document.getElementById('modele-lista');
+            if (val.length >= 4) {
+                lista.innerHTML = '';
+                Object.keys(baza).filter(k => k.startsWith(val)).forEach(k => {
+                    let opt = document.createElement('option');
+                    opt.value = k;
+                    lista.appendChild(opt);
+                });
+            }
+        }
+
+        // Wyszukiwanie
+        function szukajModelu() {
+            const szukana = document.getElementById('input-szukaj').value.trim();
+            const dane = baza[szukana];
+            if (dane) {
+                document.getElementById('view-model').innerText = "Model: " + dane.model;
+                document.getElementById('view-klient').innerText = "Klient: " + dane.klient;
+                document.getElementById('wyniki-wyszukiwania').classList.remove('d-none');
+            } else {
+                alert("Nie znaleziono modelu!");
+            }
+        }
+    </script>
+</body>
+</html>
