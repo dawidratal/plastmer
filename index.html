@@ -5,10 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PLASTMER - System Parametrów Technologicznych</title>
     <script>
-        const script = document.createElement('script');
-        script.src = "https://raw.githubusercontent.com/dawidratal/plastmer/refs/heads/main/baza_danych.js";
-        script.onload = () => console.log("Baza załadowana poprawnie!");
-        document.head.appendChild(script);
+        // Zmienna globalna dla bazy
+        let bazaModelePlastmer = {};
+
+        // Funkcja ładująca bazę z GitHuba
+        async function pobierzBaze() {
+            try {
+                const response = await fetch("https://raw.githubusercontent.com/dawidratal/plastmer/refs/heads/main/baza_danych.js");
+                const text = await response.text();
+                // Usuwamy 'const bazaModelePlastmer = ' jeśli występuje w pliku, by ocenić tylko sam obiekt
+                const jsonStr = text.replace(/const bazaModelePlastmer\s*=\s*/, '').replace(/;$/, '');
+                bazaModelePlastmer = JSON.parse(jsonStr);
+                console.log("Baza danych PLASTMER załadowana!");
+            } catch (error) {
+                console.error("Błąd ładowania bazy:", error);
+                alert("Nie udało się pobrać bazy danych. Sprawdź połączenie z internetem.");
+            }
+        }
+        pobierzBaze();
     </script>
     <style>
         /* Główne style aplikacji na ekranie */
